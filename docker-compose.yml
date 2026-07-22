@@ -4,22 +4,22 @@ services:
       context: .
       dockerfile: java-api/Dockerfile
     ports:
-      - "8081:8080"
+      - "${JAVA_API_PORT:-8081}:8080"
 
   python-api:
     build: ./python-api
     ports:
-      - "8000:8000"
+      - "${PYTHON_API_PORT:-8000}:8000"
 
   go-api:
     build: ./go-api
     ports:
-      - "8082:8080"
+      - "${GO_API_PORT:-8082}:8080"
 
   nextjs-api:
     build: ./nextjs-api
     ports:
-      - "3000:3000"
+      - "${NEXTJS_PORT:-3001}:3000"
 
   cpp-hello:
     build: ./cpp-hello
