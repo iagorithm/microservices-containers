@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+0 * * * * /opt/scripts/10-hourly-log.sh >> /var/log/sandbox/cron.log 2>&1

@@ -26,3 +26,59 @@ services:
 
   rust-hello:
     build: ./rust-hello
+
+  linux-sandbox:
+    build: ./linux-sandbox
+    stdin_open: true
+    tty: true
+    volumes:
+      - linux-sandbox-logs:/var/log/sandbox
+
+  opensourcepos-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${OSPOS_MYSQL_ROOT_PASSWORD:-root-pointofsale}"
+      MYSQL_DATABASE: "${OSPOS_MYSQL_DATABASE:-ospos}"
+      MYSQL_USER: "${OSPOS_MYSQL_USER:-ospos}"
+      MYSQL_PASSWORD: "${OSPOS_MYSQL_PASSWORD:-pointofsale}"
+    volumes:
+      - opensourcepos-mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  opensourcepos:
+    # Imagen publicada por https://github.com/opensourcepos/opensourcepos
+    image: jekkos/opensourcepos:master
+    restart: unless-stopped
+    depends_on:
+      opensourcepos-db:
+        condition: service_healthy
+    ports:
+      - "${OSPOS_PORT:-8083}:80"
+    environment:
+      CI_ENVIRONMENT: production
+      ALLOWED_HOSTNAMES: localhost
+      FORCE_HTTPS: "false"
+      PHP_TIMEZONE: "${TZ:-America/Mexico_City}"
+      MYSQL_HOST_NAME: opensourcepos-db
+      MYSQL_DB_NAME: "${OSPOS_MYSQL_DATABASE:-ospos}"
+      MYSQL_USERNAME: "${OSPOS_MYSQL_USER:-ospos}"
+      MYSQL_PASSWORD: "${OSPOS_MYSQL_PASSWORD:-pointofsale}"
+    volumes:
+      - opensourcepos-uploads:/app/public/uploads
+      - opensourcepos-logs:/app/writable/logs
+
+volumes:
+  linux-sandbox-logs:
+  opensourcepos-mysql-data:
+  opensourcepos-uploads:
+  opensourcepos-logs:
