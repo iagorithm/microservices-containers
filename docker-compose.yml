@@ -19,7 +19,7 @@ services:
   nextjs-api:
     build: ./nextjs-api
     ports:
-      - "${NEXTJS_PORT:-3001}:3000"
+      - "${NEXTJS_PORT:-3004}:3000"
 
   cpp-hello:
     build: ./cpp-hello
