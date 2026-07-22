@@ -1,6 +1,8 @@
 services:
   java-api:
-    build: ./java-api
+    build:
+      context: .
+      dockerfile: java-api/Dockerfile
     ports:
       - "8081:8080"
 
