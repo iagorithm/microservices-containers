@@ -56,7 +56,10 @@ services:
       start_period: 30s
 
   opensourcepos:
-    # Imagen publicada por https://github.com/opensourcepos/opensourcepos
+    build:
+      context: ./opensourcepos
+      dockerfile: Dockerfile
+    # Imagen base publicada por https://github.com/opensourcepos/opensourcepos
     image: jekkos/opensourcepos:master
     restart: unless-stopped
     depends_on:

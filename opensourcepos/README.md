@@ -5,13 +5,19 @@ Integración de prueba del proyecto público
 Es un POS completo escrito en PHP/CodeIgniter y publicado bajo licencia MIT.
 Utiliza una base de datos MySQL 8 independiente.
 
+El `Dockerfile` local extiende la imagen que publica el proyecto original. La
+configuración de MySQL, los volúmenes y el puerto se encuentran en el archivo
+`docker-compose.yml` de la raíz del repositorio.
+
 ## Iniciar
 
 ```sh
-docker compose up -d opensourcepos
+docker compose up -d --build opensourcepos
 ```
 
-Abre <http://localhost:8083>. Las credenciales iniciales del proyecto son:
+Abre <http://localhost:8083>. En una base de datos nueva, pulsa `Initialize`
+una vez y espera a que terminen las migraciones. Después utiliza estas
+credenciales iniciales del proyecto:
 
 - Usuario: `admin`
 - Contraseña: `pointofsale`
